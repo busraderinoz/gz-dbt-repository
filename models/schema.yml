@@ -3,10 +3,53 @@ version: 2
 sources:
   - name: raw
     schema: gz_raw_data
+    description: Greenweez ham veri kümesi
     tables:
       - name: sales
         identifier: raw_gz_sales
+        description: Greenweez satış satırları; her bir satır belirli bir siparişteki bir ürünü temsil eder
+        columns:
+          - name: date_date
+            description: Siparişin verildiği tarih
+          - name: orders_id
+            description: Siparişin benzersiz kimlik numarası
+            tests:
+              - not_null
+          - name: pdt_id
+            description: Satılan ürünün kimlik numarası (product tablosundaki products_id ile eşleşir)
+            tests:
+              - not_null
+          - name: revenue
+            description: İlgili ürün satırından elde edilen satış geliri
+          - name: quantity
+            description: İlgili siparişte satın alınan ürün adedi
+
       - name: product
         identifier: raw_gz_product
+        description: Greenweez ürün kataloğu ve satın alma maliyetleri
+        columns:
+          - name: products_id
+            description: Ürünün benzersiz birincil anahtarı
+            tests:
+              - unique
+              - not_null
+          - name: purchse_price
+            description: Ürünün birim satın alma maliyeti
+
       - name: ship
         identifier: raw_gz_ship
+        description: Sipariş bazında kargo ücretleri, lojistik ve gönderim maliyetleri
+        columns:
+          - name: orders_id
+            description: Siparişin benzersiz kimlik numarası
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: Müşteriden tahsil edilen kargo ücreti
+          - name: shipping_fee_1
+            description: shipping_fee sütununun tekrar eden kopyası
+          - name: logcost
+            description: Siparişin depo ve lojistik hazırlık maliyeti
+          - name: ship_cost
+            description: Taşıyıcı firmaya ödenen gönderim maliyeti
